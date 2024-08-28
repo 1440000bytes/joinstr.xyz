@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066) -->
+<html lang="en" class="dark-mode">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>joinstr</title>
+		<!-- SEO Meta Tags -->
+		<meta name="description" content="Decentralized Coinjoin Implementation">
+		<meta name="keywords" content="bitcoin,privacy">
+
+		<!-- Viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Favicon and Touch Icons -->
+		<link rel="apple-touch-icon" sizes="180x180" href="https://217918142-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FtPzj7pyFkGDKqqcqNQ0q%2Ficon%2FMSWkGe77X2USanwHyyQU%2Fjoinstr-new-logo.png?alt=media&token=02b0735c-7b0f-466d-a250-ed3b4e4a0b2a">
+		<link rel="icon" type="image/png" sizes="32x32" href="https://217918142-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FtPzj7pyFkGDKqqcqNQ0q%2Ficon%2FMSWkGe77X2USanwHyyQU%2Fjoinstr-new-logo.png?alt=media&token=02b0735c-7b0f-466d-a250-ed3b4e4a0b2a">
+		<link rel="icon" type="image/png" sizes="16x16" href="https://217918142-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FtPzj7pyFkGDKqqcqNQ0q%2Ficon%2FMSWkGe77X2USanwHyyQU%2Fjoinstr-new-logo.png?alt=media&token=02b0735c-7b0f-466d-a250-ed3b4e4a0b2a">
+		<!-- link rel="manifest" href="https://silicon.createx.studio/assets/favicon/site.webmanifest" -->
+		<link rel="mask-icon" href="https://217918142-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FtPzj7pyFkGDKqqcqNQ0q%2Ficon%2FMSWkGe77X2USanwHyyQU%2Fjoinstr-new-logo.png?alt=media&token=02b0735c-7b0f-466d-a250-ed3b4e4a0b2a" color="#F9B536">
+		<link rel="shortcut icon" href="https://217918142-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FtPzj7pyFkGDKqqcqNQ0q%2Ficon%2FMSWkGe77X2USanwHyyQU%2Fjoinstr-new-logo.png?alt=media&token=02b0735c-7b0f-466d-a250-ed3b4e4a0b2">
+		<meta name="msapplication-TileColor" content="#080032">
+		<meta name="msapplication-config" content="assets/favicon/browserconfig.xml">
+		<meta name="theme-color" content="#ffffff">
+		<!-- Vendor Styles -->
+		<link rel="stylesheet" media="screen" href="./assets/boxicons.min.css">
+		<link rel="stylesheet" media="screen" href="./assets/swiper-bundle.min.css">
+		<!-- Main Theme Styles + Bootstrap -->
+		<link rel="stylesheet" media="screen" href="./assets/theme.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+		<!-- Page loading styles -->
+		<style>
+			.page-loading {
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			-webkit-transition: all .4s .2s ease-in-out;
+			transition: all .4s .2s ease-in-out;
+			background-color: #fff;
+			opacity: 0;
+			visibility: hidden;
+			z-index: 9999;
+			}
+			.dark-mode .page-loading {
+			background-color: #0b0f19;
+			}
+			.page-loading.active {
+			opacity: 1;
+			visibility: visible;
+			}
+			.page-loading-inner {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			width: 100%;
+			text-align: center;
+			-webkit-transform: translateY(-50%);
+			transform: translateY(-50%);
+			-webkit-transition: opacity .2s ease-in-out;
+			transition: opacity .2s ease-in-out;
+			opacity: 0;
+			}
+			.disabled{ cursor: wait !important;}
+			.page-loading.active > .page-loading-inner {
+			opacity: 1;
+			}
+			.page-loading-inner > span {
+			display: block;
+			font-size: 1rem;
+			font-weight: normal;
+			color: #9397ad;
+			}
+			.dark-mode .page-loading-inner > span {
+			color: #fff;
+			opacity: .6;
+			}
+			.page-spinner {
+			display: inline-block;
+			width: 2.75rem;
+			height: 2.75rem;
+			margin-bottom: .75rem;
+			vertical-align: text-bottom;
+			border: .15em solid #b4b7c9;
+			border-right-color: transparent;
+			border-radius: 50%;
+			-webkit-animation: spinner .75s linear infinite;
+			animation: spinner .75s linear infinite;
+			}
+			.dark-mode .page-spinner {
+			border-color: rgba(255,255,255,.4);
+			border-right-color: transparent;
+			}
+			@-webkit-keyframes spinner {
+			100% {
+			-webkit-transform: rotate(360deg);
+			transform: rotate(360deg);
+			}
+			}
+			@keyframes spinner {
+			100% {
+			-webkit-transform: rotate(360deg);
+			transform: rotate(360deg);
+			}
+			}
+		</style>
+		<!-- Theme mode -->
+		<script async="" src="./assets/gtm.js"></script><script>
+			let mode = window.localStorage.getItem('mode'),
+			    root = document.getElementsByTagName('html')[0];
+			if (mode !== null && mode === 'dark') {
+			  root.classList.add('dark-mode');
+			} else {
+			  root.classList.remove('dark-mode');
+			}
+		</script>
+		<!-- Page loading scripts -->
+		<script>
+			(function () {
+			  window.onload = function () {
+			    const preloader = document.querySelector('.page-loading');
+			    preloader.classList.remove('active');
+			    setTimeout(function () {
+			      preloader.remove();
+			    }, 1000);
+			  };
+			})();
+		</script>
+		<!-- Body -->
+	<body>
+		<!-- Page loading spinner -->
+		<!-- Page wrapper for sticky footer -->
+		<!-- Wraps everything except footer to push footer to the bottom of the page if there is little content -->
+		<main class="page-wrapper">
+			<!-- Navbar -->
+			<!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page -->
+			<header class="header navbar navbar-expand-lg position-absolute navbar-sticky navbar-stuck">
+				<div class="container px-3">
+					<a href="#" class="navbar-brand pe-3">
+					<img src="./assets/logo.svg" width="47" alt="joinstr">
+					joinstr
+					</a>
+					<div id="navbarNav" class="offcanvas offcanvas-end">
+						<div class="offcanvas-header border-bottom">
+							<img src="./assets/logo.svg" width="24" alt="joinstr">
+							<h5 class="offcanvas-title">Menu</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+						</div>
+						<div class="offcanvas-body">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item d-md-block d-lg-none">
+									<a href="#top" class="nav-link"><i class="btn-scroll-top-icon bi bi-chevron-up me-2"></i> Up</a>
+								</li>
+								<li class="nav-item">
+									<a href="#features" class="nav-link"><i class="btn-scroll-top-icon bi bi-stars me-2"></i> Features</a>
+								</li>
+								<li class="nav-item">
+									<a href="#how" class="nav-link"><i class="btn-scroll-top-icon bi bi-binoculars me-2"></i> Overview</a>
+								</li>
+								<li class="nav-item d-md-block d-lg-none">
+									<a href="#reviews" class="nav-link"><i class="btn-scroll-top-icon bi bi-balloon-heart me-2"></i> Reviews</a>
+								</li>
+								<li class="nav-item">
+									<a href="#faqs" class="nav-link"><i class="btn-scroll-top-icon bi bi-patch-question me-2"></i> FAQs</a>
+								</li>
+								<li class="nav-item d-md-block d-lg-none">
+									<a href="https://bolt.fun/project/joinstr" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-mailbox-flag me-2"></i> Blog</a>
+								</li>
+								<li class="nav-item">
+									<a href="https://stacker.news/kpa/posts/r/kpa" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-newspaper me-2"></i> News</a>
+								</li>
+								<li class="nav-item">
+									<a href="https://docs.joinstr.xyz" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-journal-code me-2"></i> Docs</a>
+								</li>
+								<li class="nav-item d-md-block d-lg-none">
+									<a href="https://www.figma.com/file/UtMGwoJPpL8FNUmsdqYoeQ/joinstr-%F0%9F%A6%83-Design#" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-paint-bucket me-2"></i>  Design</a>
+								</li>
+								<li class="nav-item">
+									<a href="https://simplex.chat/contact/#/?v=2-7&smp=smp%3A%2F%2Fhejn2gVIqNU6xjtGM3OwQeuk8ZEbDXVJXAlnSBJBWUA%3D%40smp16.simplex.im%2F6sgt5HXO67waS511ySjAjMdfVTlxH40f%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEAEnBG0EnXUdVnkDclCItASoAeCedLR6ohSzaKZutFtQw%253D%26srv%3Dp3ktngodzi6qrf7w64mmde3syuzrv57y55hxabqcq3l5p6oi7yzze6qd.onion&data=%7B%22type%22%3A%22group%22%2C%22groupLinkId%22%3A%22kWH8D7W0oqPF9Rxa3dVgGQ%3D%3D%22%7D" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-chat me-2"></i>  Community</a>
+								</li>
+								<li class="nav-item">
+									<a href="#support" class="nav-link"><i class="btn-scroll-top-icon bi bi-currency-bitcoin me-2"></i> Support</a>
+								</li>
+								<!-- li class="nav-item">
+									<a href="https://gitlab.com/1440000bytes/joinstr/" class="nav-link"><i class="btn-scroll-top-icon bi bi-code me-2"></i>  Code</a>
+									</li-->
+							</ul>
+						</div>
+						<div class="offcanvas-header border-top">
+							<a href="https://gitlab.com/1440000bytes/joinstr/" class="btn btn-primary w-100" target="_blank" rel="noopener">
+							<i class="bi bi-github"></i>
+							&nbsp;Contribute
+							</a>
+						</div>
+					</div>
+					<div class="form-check form-switch mode-switch pe-lg-1 ms-auto me-4" data-bs-toggle="mode">
+						<input type="checkbox" class="form-check-input" id="theme-mode">
+						<label class="form-check-label d-none d-sm-block" for="theme-mode"><i class="bi bi-moon-fill mt-0 rosa" style="font-size:83%;opacity:.8;"></i></label>
+						<label class="form-check-label d-none d-sm-block" for="theme-mode"><i class="bi bi-brightness-high-fill rosa" style="opacity:.6;"></i></label>
+					</div>
+					<button type="button" class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+					<a href="https://gitlab.com/1440000bytes/joinstr/" class="btn btn-primary btn-sm fs-sm rounded d-none d-lg-inline-flex" target="_blank" rel="noopener">
+					<i class="bi bi-github"></i>
+					&nbsp;Contribute
+					</a>
+				</div>
+			</header>
+			<!-- Hero -->
+			<section class="overflow-hidden pt-5" style="background: radial-gradient(116.18% 118% at 50% 100%, #f9675f1a 0%, #f9b5360d 41.83%, rgba(241, 244, 253, 0.07) 82.52%);">
+				<div class="container pt-3 pt-sm-4 pt-xl-5">
+					<div class="row pt-md-2 pt-lg-5">
+						<div class="col-md-5 d-flex flex-column mt-md-4 pt-5 pb-3 pb-sm-4 py-md-5">
+							<h1 class="display-4 text-center text-md-start mb-4">Coinjoin made easier and better.</h1>
+							<p class="fs-lg text-center text-md-start pb-2 pb-md-3 mb-4 mb-lg-5">Nostr relays are used to coordinate in <strong>joinstr</strong>. Participants can also use multiple relays.</p>
+							<a href="#" target="_blank" class="btn btn-primary rounded col-md-10 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-globe pe-2 fs-4"></i> Try it Online</a>
+							<!-- a href="#" target="_blank" class="btn btn-warning rounded text-dark col-md-10 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-plus-square me-2 fs-4"></i> Save it as PWA</a-->
+							<a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/plugin/zip" target="_blank" class="btn btn-secondary rounded col-md-10 btn-lg px-3 py-2 mb-3"><img src="https://electrum.org/logo/electrum_logo.png" class=" me-2" width="28" height="28"> Electrum Plugin</a>
+							<!--a href="#" target="_blank" class="btn btn-outline-primary rosa-bg rounded col-md-10 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-cloud-arrow-down me-2 fs-4"></i> Docker Container</a-->
+							<a href="#" class="btn btn-dark col-md-10 btn-lg px-3 py-2 mb-3 disabled"  style="border: 1px grey dotted;">
+							<img src="./assets/googleplay-light.svg" class="light-mode-img" width="139" alt="Google Play">
+							<img src="./assets/googleplay-dark.svg" class="dark-mode-img" width="139" alt="Google Play">
+							</a>
+							<div class="position-relative d-inline-flex align-items-center justify-content-center justify-content-md-start mt-auto pt-3 pt-md-4 pb-xl-2">
+								<a href="#features" class="btn btn-icon btn-light bg-white stretched-link rounded-circle me-3" data-scroll="" data-scroll-offset="120">
+								<i class="bi bi-chevron-down"></i>
+								</a>
+								<span class="fs-sm">Discover more</span>
+							</div>
+						</div>
+						<div class="col-md-7 align-self-end">
+							<div class="position-relative overflow-hidden mt-4 pb-3 pt-4 mx-auto me-md-0" style="max-width: 632px;">
+								<div class="ratio ratio-1x1"></div>
+								<img src="./assets/hero-phone-1.png" class="rellax position-absolute top-0 start-0 zindex-2" data-rellax-speed="1.6" data-disable-parallax-down="md" alt="Phone" style="transform: translate3d(0px, 0px, 0px);">
+								<img src="./assets/hero-phone-2.png" class="rellax position-absolute top-0 start-0" data-rellax-speed="2.8" data-disable-parallax-down="md" alt="Phone" style="transform: translate3d(0px, 0px, 0px);">
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+			</section>
+			<!-- Brands (carousel on screens < 1100px) -->
+			<section class="container py-5 mt-md-2 mt-lg-4">
+				<div class="swiper pt-2 mx-n2 swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden" data-swiper-options="{
+					&quot;slidesPerView&quot;: 2,
+					&quot;pagination&quot;: {
+					&quot;el&quot;: &quot;.swiper-pagination&quot;,
+					&quot;clickable&quot;: true
+					},
+					&quot;breakpoints&quot;: {
+					&quot;500&quot;: {
+					&quot;slidesPerView&quot;: 3,
+					&quot;spaceBetween&quot;: 8
+					},
+					&quot;650&quot;: {
+					&quot;slidesPerView&quot;: 4,
+					&quot;spaceBetween&quot;: 8
+					},
+					&quot;900&quot;: {
+					&quot;slidesPerView&quot;: 5,
+					&quot;spaceBetween&quot;: 8
+					},
+					&quot;1100&quot;: {
+					&quot;slidesPerView&quot;: 6,
+					&quot;spaceBetween&quot;: 8
+					}
+					}
+					}">
+					<div class="swiper-wrapper" id="swiper-wrapper-699c03107f5d1b0ac" aria-live="polite" style="transform: translate3d(0px, 0px, 0px);">
+						<!-- Item -->
+						<div class="swiper-slide py-3 swiper-slide-active" style="width: 212px; margin-right: 8px;" role="group" aria-label="1 / 6">
+							<a href="https://stacker.news/kpa/posts/r/kpa" target="_blank" class="card card-body card-hover px-2 mx-2">
+							<img src="./assets/01.svg" class="d-block mx-auto my-2" width="154" alt="STACKER NEWS">
+							</a>
+						</div>
+						<!-- Item -->
+						<div class="swiper-slide py-3 swiper-slide-next" style="width: 212px; margin-right: 8px;" role="group" aria-label="2 / 6">
+							<a href="https://bolt.fun/project/joinstr" target="_blank" class="card card-body card-hover px-2 mx-2">
+							<img src="./assets/02.svg" class="d-block mx-auto my-2" width="154" alt="BOLT.FUN">
+							</a>
+						</div>
+						<!-- Item -->
+						<div class="swiper-slide py-3" style="width: 212px; margin-right: 8px;" role="group" aria-label="3 / 6">
+							<a href="https://www.bobspaces.net/" target="_blank" class="card card-body card-hover px-2 mx-2">
+							<img src="./assets/03.svg" class="d-block mx-auto my-2" width="154" alt="BoB Space">
+							</a>
+						</div>
+						<!-- Item -->
+						<div class="swiper-slide py-3" style="width: 212px; margin-right: 8px;" role="group" aria-label="4 / 6">
+							<a href="https://geyser.fund/project/joinstr/" target="_blank" class="card card-body card-hover px-2 mx-2">
+							<img src="./assets/08.svg" class="d-block mx-auto my-2" width="154" alt="Geyser">
+							</a>
+						</div>
+						<!-- Item -->
+						<div class="swiper-slide py-3" style="width: 212px; margin-right: 8px;" role="group" aria-label="5 / 6">
+							<a href="https://www.figma.com/file/UtMGwoJPpL8FNUmsdqYoeQ/joinstr-%F0%9F%A6%83-Design#" target="_blank" class="card card-body card-hover px-2 mx-2">
+							<img src="./assets/05.svg" class="d-block mx-auto my-2" width="154" alt="Figma Design">
+							</a>
+						</div>
+						<!-- Item -->
+						<div class="swiper-slide py-3" role="group" aria-label="6 / 6" style="width: 212px; margin-right: 8px;">
+							<a href="https://simplex.chat/contact/#/?v=2-7&smp=smp%3A%2F%2Fhejn2gVIqNU6xjtGM3OwQeuk8ZEbDXVJXAlnSBJBWUA%3D%40smp16.simplex.im%2F6sgt5HXO67waS511ySjAjMdfVTlxH40f%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEAEnBG0EnXUdVnkDclCItASoAeCedLR6ohSzaKZutFtQw%253D%26srv%3Dp3ktngodzi6qrf7w64mmde3syuzrv57y55hxabqcq3l5p6oi7yzze6qd.onion&data=%7B%22type%22%3A%22group%22%2C%22groupLinkId%22%3A%22kWH8D7W0oqPF9Rxa3dVgGQ%3D%3D%22%7D" target="_blank" class="card card-body card-hover px-2 mx-2">
+							<img src="./assets/06.svg" class="d-block mx-auto my-2" width="154" alt="Simplex">
+							</a>
+						</div>
+					</div>
+					<!-- Pagination (bullets) -->
+					<div class="swiper-pagination position-relative pt-2 mt-4 swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal swiper-pagination-lock"><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 1" aria-current="true"></span></div>
+					<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+				</div>
+			</section>
+			<!-- Fetures -->
+			<section id="features" class="container pt-lg-2 pt-xl-3 pb-3 pb-xl-5 mt-n2 mt-sm-0 mb-2 mb-md-4 mb-lg-5">
+				<i class="bi bi-stars d-block fs-1 text-primary ms-1 mb-2 py-1"></i>
+				<h2 class="fs-1 d-block text-md-start mb-4">Features</h2>
+				<div class="row align-items-center my-3 py-md-3 py-lg-5">
+					<div class="col-md-6 col-xl-5 offset-lg-1 offset-xl-2 order-md-2 mb-2 mb-md-0 pb-4 pb-md-0">
+						<div class="position-relative mx-auto mx-md-0" style="max-width: 469px;">
+							<img src="./assets/screen01.png" class="rellax d-block" alt="Screen" data-rellax-percentage="0.5" data-rellax-speed="-0.5" data-disable-parallax-down="md" style="transform: translate3d(-4px, 40px, 0px);">
+							<div class="rellax position-absolute top-0 end-0 w-100 h-100" data-rellax-percentage="0.5" data-rellax-speed="0.75" data-disable-parallax-down="md" style="transform: translate3d(-21px, -60px, 0px);">
+								<img src="./assets/screen02.png" alt="Screen">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-5 col-xl-4 offset-xl-1 order-md-1 pb-md-4">
+						<ul class="list-unstyled pb-3 mb-3">
+							<li class="d-flex align-items-center mb-2">
+								<i class="bi bi-check-circle fs-xl text-primary me-2"></i>
+								Decentralized
+							</li>
+							<li class="d-flex align-items-center mb-2">
+								<i class="bi bi-check-circle fs-xl text-primary me-2"></i>
+								Better UI/UX
+							</li>
+							<li class="d-flex align-items-center mb-2">
+								<i class="bi bi-check-circle fs-xl text-primary me-2"></i>
+								Nostr relays used for coordination
+							</li>
+							<li class="d-flex align-items-center mb-2">
+								<i class="bi bi-check-circle fs-xl text-primary me-2"></i>
+								Custom pool amounts and number of participants
+							</li>
+							<li class="d-flex align-items-center mb-2">
+								<i class="bi bi-check-circle fs-xl text-primary me-2"></i>
+								Easy to implement in different wallets
+							</li>
+						</ul>
+						<a href="https://docs.joinstr.xyz" target="_blank" class="btn btn-primary">
+						Learn more
+						<i class="bi bi-chevron-right fs-xl ms-2 me-n1"></i>
+						</a>
+					</div>
+				</div>
+				<!-- div class="row align-items-center mt-2 mt-md-0 pt-5 pt-md-4 pt-lg-0 pb-md-3 pb-lg-5">
+					<div class="col-md-6 col-lg-5 offset-xl-1 mb-2 mb-md-0 pb-4 pb-md-0">
+						<div class="position-relative mx-auto mx-md-0" style="max-width: 462px;">
+							<img src="./assets/screen03.png" class="rellax d-block" alt="Screen" data-rellax-percentage="0.5" data-rellax-speed="-0.5" data-disable-parallax-down="md" style="transform: translate3d(0px, 0px, 0px);">
+							<div class="rellax position-absolute top-0 end-0 w-100 h-100 me-md-n3" data-rellax-percentage="0.5" data-rellax-speed="0.75" data-disable-parallax-down="md" style="transform: translate3d(0px, -21, 0px);">
+								<img src="./assets/screen04.png" alt="Screen">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-xl-5 offset-lg-1">
+						<h2 class="pb-3">Seamesly Coordinated CoinJoins</h2>
+						<div class="row row-cols-1 row-cols-sm-2 text-start pb-3">
+							<div class="col pb-4">
+								<div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+									<img src="./assets/payments.svg" alt="Easy Payments">
+								</div>
+								<p class="mb-0">Define your CoinJoin demomination. It will set the pool min participation amount for others to join.</p>
+							</div>
+							<div class="col pb-4">
+								<div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+									<img src="./assets/cashback.svg" alt="Regular Cashback">
+								</div>
+								<p class="mb-0">Join the freedom to use different denominations that work for you instead of... well you know!</p>
+							</div>
+						</div>
+						<a href="https://docs.joinstr.xyz" target="_blank" class="btn btn-primary">
+						Learn more
+						<i class="bi bi-chevron-right fs-xl ms-2 me-n1"></i>
+						</a>
+					</div>
+				</div -->
+				<!-- Extra spacing for dark mode only -->
+				<div class="pt-5 d-none d-dark-mode-block"></div>
+			</section>
+			<!-- How it works (Slider) -->
+			<section id="how" class="position-relative bg-secondary py-5">
+				<div class="container mt-3 pt-md-2 pt-lg-4 pb-2 pb-md-4 pb-lg-5">
+					<i class="bi text-center bi-binoculars-fill d-block fs-1 text-primary ms-1 mb-2 py-1"></i>
+					<h2 class="h1 text-center pb-2 pb-md-0 mb-4 mb-md-5">How Does It Work?</h2>
+					<div class="position-relative mx-5">
+						<!-- Slider prev/next buttons -->
+						<button type="button" id="prev-screen" class="btn btn-prev btn-icon position-absolute top-50 start-0 ms-n5 translate-middle-y" tabindex="0" aria-label="Previous slide" aria-controls="swiper-wrapper-38bff0395258959f">
+						<i class="bi bi-chevron-left"></i>
+						</button>
+						<button type="button" id="next-screen" class="btn btn-next btn-icon position-absolute top-50 end-0 me-n5 translate-middle-y" tabindex="0" aria-label="Next slide" aria-controls="swiper-wrapper-38bff0395258959f">
+						<i class="bi bi-chevron-right"></i>
+						</button>
+						<!-- Phone frame -->
+						<div class="position-absolute top-0 start-50 translate-middle-x h-100 w-100 w-md-33 zindex-5">
+							<div class="d-flex bg-repeat-0 bg-size-cover w-100 h-100 mx-auto" style="max-width: 328px; background-image: url(assets/img/landing/app-showcase/screens/phone-frame.png);"></div>
+						</div>
+						<!-- Phone screen -->
+						<div class="position-absolute top-0 start-50 translate-middle-x h-100 w-100 w-md-33">
+							<div class="d-flex bg-repeat-0 bg-size-cover w-100 h-100 mx-auto" style="max-width: 328px; background-image: url(assets/img/landing/app-showcase/screens/phone-screen.png);"></div>
+						</div>
+						<!-- Swiper slider -->
+						<div class="swiper mobile-app-slider swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden" data-swiper-options="{
+							&quot;slidesPerView&quot;: 1,
+							&quot;centeredSlides&quot;: true,
+							&quot;loop&quot;: true,
+							&quot;tabs&quot;: true,
+							&quot;pagination&quot;: {
+							&quot;el&quot;: &quot;#swiper-progress&quot;,
+							&quot;type&quot;: &quot;progressbar&quot;
+							},
+							&quot;navigation&quot;: {
+							&quot;prevEl&quot;: &quot;#prev-screen&quot;,
+							&quot;nextEl&quot;: &quot;#next-screen&quot;
+							},
+							&quot;breakpoints&quot;: {
+							&quot;768&quot;: { &quot;slidesPerView&quot;: 3 }
+							}
+							}">
+							<div class="swiper-wrapper" id="swiper-wrapper-38bff0395258959f" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-800px, 0px, 0px);">
+								<div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-tab="#text-2" data-swiper-slide-index="1" style="width: 400px;" role="group" aria-label="2 / 4">
+									<img src="./assets/02.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<div class="swiper-slide swiper-slide-duplicate" data-swiper-tab="#text-3" data-swiper-slide-index="2" style="width: 400px;" role="group" aria-label="3 / 4">
+									<img src="./assets/03.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<div class="swiper-slide swiper-slide-duplicate swiper-slide-prev" data-swiper-tab="#text-4" data-swiper-slide-index="3" style="width: 400px;" role="group" aria-label="4 / 4">
+									<img src="./assets/04.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<!-- Item -->
+								<div class="swiper-slide swiper-slide-active" data-swiper-tab="#text-1" data-swiper-slide-index="0" style="width: 400px;" role="group" aria-label="1 / 4">
+									<img src="./assets/01.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<!-- Item -->
+								<div class="swiper-slide swiper-slide-next" data-swiper-tab="#text-2" data-swiper-slide-index="1" style="width: 400px;" role="group" aria-label="2 / 4">
+									<img src="./assets/02.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<!-- Item -->
+								<div class="swiper-slide" data-swiper-tab="#text-3" data-swiper-slide-index="2" style="width: 400px;" role="group" aria-label="3 / 4">
+									<img src="./assets/03.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<!-- Item -->
+								<div class="swiper-slide swiper-slide-duplicate-prev" data-swiper-tab="#text-4" data-swiper-slide-index="3" style="width: 400px;" role="group" aria-label="4 / 4">
+									<img src="./assets/04.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active" data-swiper-tab="#text-1" data-swiper-slide-index="0" style="width: 400px;" role="group" aria-label="1 / 4">
+									<img src="./assets/01.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-tab="#text-2" data-swiper-slide-index="1" style="width: 400px;" role="group" aria-label="2 / 4">
+									<img src="./assets/02.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+								<div class="swiper-slide swiper-slide-duplicate" data-swiper-tab="#text-3" data-swiper-slide-index="2" role="group" aria-label="3 / 4" style="width: 400px;">
+									<img src="./assets/03.png" class="d-block mx-auto" width="328" alt="Screen">
+								</div>
+							</div>
+							<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+						</div>
+					</div>
+					<!-- Swiper tabs (Description text) -->
+					<div class="row justify-content-center pt-4 mt-2 mt-md-3">
+						<div class="swiper-tabs col-xl-6 col-lg-7 col-md-8 text-center">
+							<!-- Text 1 -->
+							<div id="text-1" class="swiper-tab active">
+								<h3 class="h4 pb-1 mb-2">Step 2. Select one UTXO </h3>
+								<p class="mb-0">Choose the Output (UTXO) you wish to include in the CoinJoin.</p>
+							</div>
+							<!-- Text 2 -->
+							<div id="text-2" class="swiper-tab">
+								<h3 class="h4 pb-1 mb-2">Step 3. Wait for other participants</h3>
+								<p class="mb-0">Once joinstr client initiates the process, you will be notified about each step.</p>
+							</div>
+							<!-- Text 3 -->
+							<div id="text-3" class="swiper-tab">
+								<h3 class="h4 pb-1 mb-2">Step 4. Get coinjoined UTXO in the end</h3>
+								<p class="mb-0">When completed, you will see the coinjoin transaction ID and other details.</p>
+							</div>
+							<!-- Text 4 -->
+							<div id="text-4" class="swiper-tab">
+								<h3 class="h4 pb-1 mb-2">Step 1. Define <strong>joinstr</strong> Settings</h3>
+								<p class="mb-0">Configure different options. This includes setting up wallet, RPC access, nostr relay, denomination, number of peers etc.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Slider progress -->
+				<div id="swiper-progress" class="swiper-pagination bottom-0 swiper-pagination-progressbar swiper-pagination-horizontal" style="top: auto;"><span class="swiper-pagination-progressbar-fill" style="transform: translate3d(0px, 0px, 0px) scaleX(0.25) scaleY(1); transition-duration: 300ms;"></span></div>
+			</section>
+			<!-- Testimonials -->
+			<section id="reviews" class="py-5 mb-md-2" style="background: radial-gradient(116.18% 118% at 50% 100%, #f9675f1a 0%, #f9b5360d 41.83%, rgba(241, 244, 253, 0.07) 82.52%);">
+				<div class="container py-lg-4">
+					<div class="row py-md-3">
+						<div class="col-xl-3 col-lg-4 pt-2">
+							<h2 class="h1 text-center text-lg-start pb-2">People<i class="bi text-center bi-balloon-heart-fill fs-1 text-primary ms-1 mb-2 py-1"></i> Loving it</h2>
+							<!-- Slider prev/next buttons -->
+							<div class="d-flex justify-content-center justify-content-lg-start pt-lg-5">
+								<button type="button" id="prev-review" class="btn btn-prev btn-icon btn-sm me-3" tabindex="0" aria-label="Previous slide" aria-controls="swiper-wrapper-e9dfa434b6421d9a">
+									<i class="bi bi-chevron-left"></i>
+								</button>
+								<button type="button" id="next-review" class="btn btn-next btn-icon btn-sm" tabindex="0" aria-label="Next slide" aria-controls="swiper-wrapper-e9dfa434b6421d9a">
+									<i class="bi bi-chevron-right"></i>
+								</button>
+							</div>
+						</div>
+						<div class="col-lg-8 offset-xl-1 pt-4 mt-2 mt-md-3 mt-lg-0 pt-lg-0">
+							<div class="px-2 px-sm-0">
+								<div class="swiper mx-n2 swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden" data-swiper-options="{
+									&quot;slidesPerView&quot;: 1,
+									&quot;spaceBetween&quot;: 8,
+									&quot;navigation&quot;: {
+									&quot;prevEl&quot;: &quot;#prev-review&quot;,
+									&quot;nextEl&quot;: &quot;#next-review&quot;
+									},
+									&quot;loop&quot;: true,
+									&quot;breakpoints&quot;: {
+									&quot;600&quot;: { &quot;slidesPerView&quot;: 2 }
+									}
+									}">
+									<div class="swiper-wrapper" id="swiper-wrapper-e9dfa434b6421d9a" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-432px, 0px, 0px);">
+										<!-- Testimonial for Super Testnet -->
+										<div class="swiper-slide h-auto pt-4 pb-3 px-2 swiper-slide-active" data-swiper-slide-index="0" style="width: 432px; margin-right: 8px;" role="group" aria-label="1 / 2">
+											<div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
+												<div class="card h-100 position-relative border-0 shadow-sm pt-4">
+													<span class="btn btn-icon btn-primary shadow-primary pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
+														<i class="bi bi-quote"></i>
+													</span>
+													<blockquote class="card-body pb-4 mb-0">
+														<div class="text-nowrap pt-1 mb-3">
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-muted opacity-75"></i>
+														</div>
+														<p class="fs-lg mb-0">I like the small codebase and electrum plugin. The project really is wonderful overall.</p>
+													</blockquote>
+													<div class="card-footer d-flex align-items-center border-0 pt-0">
+														<img src="https://i.ibb.co/nbwFgVg/twitter-avi-gender-balanced-figure.png" width="48" class="rounded-circle ms-n1" alt="supertestnet">
+														<div class="ps-2 ms-1">
+															<h6 class="fs-base fw-semibold mb-0"><a href="https://twitter.com/super_testnet"></a>Super Testnet</h6>
+															<span class="fs-sm text-muted">Bitcoin Developer</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- Testimonial for Cyph3rp9nk -->
+										<div class="swiper-slide h-auto pt-4 pb-3 px-2" data-swiper-slide-index="1" style="width: 432px; margin-right: 8px;" role="group" aria-label="2 / 2">
+											<div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
+												<div class="card h-100 position-relative border-0 shadow-sm pt-4">
+													<span class="btn btn-icon btn-primary shadow-primary pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
+														<i class="bi bi-quote"></i>
+													</span>
+													<blockquote class="card-body pb-4 mb-0">
+														<div class="text-nowrap pt-1 mb-3">
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-muted opacity-75"></i>
+														</div>
+														<p class="fs-lg mb-0">... decentralized solutions such as Joinstr or Joinmarket, although I like Joinstr better because it does away with fee collection, coinjoin for everyone.</p>
+													</blockquote>
+													<div class="card-footer d-flex align-items-center border-0 pt-0">
+														<img src="https://primal.b-cdn.net/media-cache?s=s&a=1&u=https%3A%2F%2Fm.primal.net%2FHINp.jpg" width="48" class="rounded-circle ms-n1" alt="Cyph3rp9nk">
+														<div class="ps-2 ms-1">
+															<h6 class="fs-base fw-semibold mb-0"><a href="https://primal.net/e/note1cu8dgjx3q8vtmdzyvmrn2984hdsdtmsraafv0je3k7suue8qlm3qkkq0p7" target="_blank">Cyph3rp9nk</a></h6>
+															<span class="fs-sm text-muted">@nostrpurple.com</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- Testimonial for Cyph3rp9nk -->
+										<div class="swiper-slide h-auto pt-4 pb-3 px-2" data-swiper-slide-index="1" style="width: 432px; margin-right: 8px;" role="group" aria-label="2 / 2">
+											<div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
+												<div class="card h-100 position-relative border-0 shadow-sm pt-4">
+													<span class="btn btn-icon btn-primary shadow-primary pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
+														<i class="bi bi-quote"></i>
+													</span>
+													<blockquote class="card-body pb-4 mb-0">
+														<div class="text-nowrap pt-1 mb-3">
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+															<i class="bi bi-star text-warning"></i>
+														</div>
+														<p class="fs-lg mb-0">Joinstr offers privacy for everyone: without barriers, without extra fees, without relying on a third party, without a single point of failure. The sovereign privacy tool par excellence.</p>
+													</blockquote>
+													<div class="card-footer d-flex align-items-center border-0 pt-0">
+														<img src="https://i.imgur.com/E3shF4k.jpeg" width="48" class="rounded-circle ms-n1" alt="kote">
+														<div class="ps-2 ms-1">
+															<h6 class="fs-base fw-semibold mb-0"><a href="https://njump.me/npub1gjss243nx2enna7cn3xs70s5up4k29ng7ne4um78sp3mxswzhxfq6n8j52" target="_blank">Kote</a></h6>
+															<span class="fs-sm text-muted">Bitcoin Educator</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>	
+			<!-- FAQ -->
+			<section id="faqs" class="container py-5 mb-lg-2">
+				<div class="row py-2 py-md-4 py-lg-5">
+					<div class="col-xl-4 col-md-5 text-center text-md-start pt-md-2 pb-2 pb-md-0 mb-4 mb-md-0">
+						<h2 class="pb-3 mb-1 mb-lg-3">Any questions? <br class="d-none d-md-inline">Check out the FAQs</h2>
+						<p class="fs-lg pb-3 mb-2 mb-lg-3">Still have unanswered questions and need to get in touch?</p>
+						<div class="row row-cols-1 row-cols-sm-1 g-3 g-sm-4">
+							<div class="col">
+								<div class="card card-hover">
+									<div class="card-body pb-3">
+										<i class="bi bi-chat-left-text-fill d-block fs-1 text-primary ms-1 mb-2 py-1"></i>
+										<p class="fs-sm mb-2">Still have  questions?</p>
+										<a href="https://simplex.chat/contact/#/?v=2-7&smp=smp%3A%2F%2Fhejn2gVIqNU6xjtGM3OwQeuk8ZEbDXVJXAlnSBJBWUA%3D%40smp16.simplex.im%2F6sgt5HXO67waS511ySjAjMdfVTlxH40f%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEAEnBG0EnXUdVnkDclCItASoAeCedLR6ohSzaKZutFtQw%253D%26srv%3Dp3ktngodzi6qrf7w64mmde3syuzrv57y55hxabqcq3l5p6oi7yzze6qd.onion&data=%7B%22type%22%3A%22group%22%2C%22groupLinkId%22%3A%22kWH8D7W0oqPF9Rxa3dVgGQ%3D%3D%22%7D" class="btn btn-link stretched-link px-0 text-left">
+										Join the Comunity
+										<i class="bi bi-chat fs-xl ms-2"></i>
+										</a>
+									</div>
+								</div>
+								<div class="btn-group-vertical w-100 pt-3 pb-4 pb-lg-5">
+									<a href="#" target="_blank" class="btn btn-primary w-100 rounded btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-globe pe-2 fs-4"></i> Try it Online</a>
+									<!--a href="#" target="_blank" class="btn btn-warning w-100 rounded btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-plus-square me-2 fs-4"></i> Save it as PWA</a-->
+									<a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/plugin/zip" target="_blank" class="btn btn-secondary w-100 rounded btn-lg px-3 py-2 mb-3"><img src="https://electrum.org/logo/electrum_logo.png" class=" me-2" width="28" height="28"> Electrum Plugin</a>
+									<!--a href="#" target="_blank" class="btn btn-outline-primary rosa-bg rounded col-2 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-cloud-arrow-down me-2 fs-4"></i> Docker Container</a -->
+									<a href="#" target="_blank" class="btn btn-dark rounded col-2 btn-lg px-3 py-2 mb-3 disabled" style="border: 1px grey dotted;">
+									<img src="./assets/googleplay-light.svg" class="light-mode-img" width="139" alt="Google Play">
+									<img src="./assets/googleplay-dark.svg" class="dark-mode-img" width="139" alt="Google Play">
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-7 offset-xl-1">
+						<div class="accordion" id="faq">
+							<div class="accordion-item border-0 rounded-3 shadow-sm mb-3">
+								<h2 class="accordion-header" id="q1-heading">
+									<button class="accordion-button shadow-none rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#q1" aria-expanded="true" aria-controls="q1">
+									Can I use joinstr on mainnet right now?
+									</button>
+								</h2>
+								<div id="q1" class="accordion-collapse collapse show" aria-labelledby="q1-heading" data-bs-parent="#faq">
+									<div class="accordion-body fs-sm pt-0">
+										<p>Yes. Electrum plugin can be used on mainnet. However there is no sybil resistance added yet so avoid using untrusted relays and suspicious pools.</p>
+									</div>
+								</div>
+							</div>
+							<div class="accordion-item border-0 rounded-3 shadow-sm mb-3">
+								<h2 class="accordion-header" id="q2-heading">
+									<button class="accordion-button shadow-none rounded-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2" aria-expanded="false" aria-controls="q2">
+									Can I use joinstr without bitcoin core?
+									</button>
+								</h2>
+								<div id="q2" class="accordion-collapse collapse" aria-labelledby="q2-heading" data-bs-parent="#faq">
+									<div class="accordion-body fs-sm pt-0">
+										<p>Yes. It can be used as an electrum plugin which does not require bitcoin core.</p>
+									</div>
+								</div>
+							</div>
+							<div class="accordion-item border-0 rounded-3 shadow-sm mb-3">
+								<h2 class="accordion-header" id="q3-heading">
+									<button class="accordion-button shadow-none rounded-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q3" aria-expanded="false" aria-controls="q3">
+									Can I use joinstr on mobile?
+									</button>
+								</h2>
+								<div id="q3" class="accordion-collapse collapse" aria-labelledby="q3-heading" data-bs-parent="#faq">
+									<div class="accordion-body fs-sm pt-0">
+										<p>Mobile app for joinstr is a work in progress.</p>
+									</div>
+								</div>
+							</div>
+							<div class="accordion-item border-0 rounded-3 shadow-sm mb-3">
+								<h2 class="accordion-header" id="q4-heading">
+									<button class="accordion-button shadow-none rounded-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q4" aria-expanded="false" aria-controls="q4">
+									What fees do I need to pay for using joinstr?
+									</button>
+								</h2>
+								<div id="q4" class="accordion-collapse collapse" aria-labelledby="q4-heading" data-bs-parent="#faq">
+									<div class="accordion-body fs-sm pt-0">
+										<p>a) Transaction fees which is contributed by all the participants</p>
+										<p>b) Nostr relay fee if using a paid relay</p>
+									</div>
+								</div>
+							</div>
+							<div class="accordion-item border-0 rounded-3 shadow-sm mb-3">
+								<h2 class="accordion-header" id="q5-heading">
+									<button class="accordion-button shadow-none rounded-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q5" aria-expanded="false" aria-controls="q5">
+									What pool denominations are supported in joinstr pools?
+									</button>
+								</h2>
+								<div id="q5" class="accordion-collapse collapse" aria-labelledby="q5-heading" data-bs-parent="#faq">
+									<div class="accordion-body fs-sm pt-0">
+										<p>Users can configure it and create pools based on custom denominations.</p>
+									</div>
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- Subscription CTA -->
+			<section id="support" class="container">
+				<div class="bg-secondary rounded-3 py-5 px-3 px-sm-4 px-lg-5 px-xl-0">
+					<div class="row align-items-center py-lg-4">
+						<div class="col-xl-4 col-md-4 offset-md-1 mb-4 mb-md-0">
+							<i class="bi bi-currency-bitcoin d-block fs-1 text-primary ms-1 mb-2 pe-3"></i>
+							<h2 class="h1 text-center text-md-start mb-4">Support</h2>
+							<p class="fs-lg text-muted text-center text-md-start mb-4 mb-xl-5">Joinstr is a free and open-source project based on <a href="https://value4value.info" target="_blank">Value 4 Value</a> model and MIT licensed. If you find <strong>joinstr</strong> useful, consider zapping some sats on nostr or use the donate button or 
+							   contribute in the <a href="https://geyser.fund/project/joinstr/" target="_blank">crowdfunding campaign</a> hosted on 
+							<a href="https://geyser.fund/project/joinstr/" target="_blank">
+								<svg width="92" height="29" viewBox="0 0 92 29" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_492_16064)"><path d="M27.76 9.98546C27.7437 9.88852 27.7271 9.79167 27.7086 9.69538C27.6494 9.38512 27.6494 9.38512 27.6494 9.38512C27.5663 9.04919 27.1916 8.77437 26.8169 8.77429L17.732 8.77349C17.3571 8.77341 16.956 9.0627 16.8405 9.41618L14.9103 15.3242C14.8533 15.4986 14.7783 15.7136 14.8611 15.8297C14.9462 15.9488 15.192 15.9669 15.3819 15.9669H19.0806C19.0806 15.9669 19.2534 15.9655 19.2764 16.0844C19.301 16.2107 19.1685 16.3467 19.1685 16.3467L12.6486 23.1404C12.4206 23.3781 12.0223 23.7927 11.7638 24.0617L10.0914 25.8014C10.0914 25.8014 10.0573 25.8395 10.0173 25.8759C9.99434 25.8971 9.97222 25.9155 9.95115 25.9318C9.71914 26.1105 9.60943 26.0105 9.70568 25.6837L10.5567 22.7924C10.6617 22.4358 10.8334 21.8519 10.9385 21.4953L11.4259 19.8393C11.5076 19.5616 11.6004 19.2466 11.6588 19.0481C11.6753 18.9917 11.714 18.8177 11.6556 18.7298C11.6003 18.6463 11.507 18.6305 11.4022 18.6305C11.2888 18.6305 11.1551 18.6305 11.0145 18.6305H7.49174C7.11685 18.6305 6.99103 18.4423 7.21205 18.2124C7.43308 17.9825 7.82544 17.5742 8.08406 17.3052L10.8229 14.4562C11.0815 14.1872 11.4796 13.7726 11.7079 13.5348C11.9361 13.297 12.3343 12.8823 12.5925 12.613L13.055 12.1311C13.3135 11.8618 13.7362 11.4212 13.9945 11.1521L14.9437 10.1632C15.202 9.89393 15.6078 9.47108 15.8452 9.22351C16.0829 8.97602 16.3395 8.70858 16.4156 8.62921C16.4916 8.54992 16.7652 8.26476 17.0237 7.9955L22.3041 2.4933C22.5626 2.22404 22.512 1.84553 22.1921 1.65206C22.1921 1.65206 21.4452 1.2007 20.7365 0.907279C18.8944 0.144539 16.8947 -0.12687 14.8747 0.053884C14.3051 0.104892 13.7353 0.191574 13.1686 0.313215C11.6392 0.64167 10.1413 1.21992 8.73151 2.02144C7.85125 2.52167 7.00898 3.10762 6.21745 3.77057C4.35308 5.33181 2.78852 7.30508 1.67691 9.59002C1.12467 10.7251 0.717402 11.8717 0.441963 13.0066C-0.135441 15.3856 -0.130713 17.7215 0.360622 19.8232C0.68727 21.2218 1.23085 22.5259 1.96814 23.684C2.01309 23.7547 2.05909 23.8251 2.10557 23.8947C2.50234 24.4891 2.95297 25.0446 3.454 25.5548C4.21829 26.333 5.10423 27.0087 6.10717 27.5548C6.60724 27.8273 7.12054 28.0584 7.64312 28.2512C7.94004 28.3605 8.24025 28.4578 8.54326 28.5424C9.06272 28.6876 9.591 28.7964 10.1246 28.8711C14.7723 29.5202 20.1775 27.493 23.9121 23.0473C24.6268 22.1965 25.2494 21.2966 25.7785 20.3622C26.4733 19.1356 27.0064 17.8495 27.3711 16.5383C27.6753 15.4448 27.8617 14.3356 27.9272 13.232C27.9925 12.1346 27.9379 11.0449 27.76 9.98546Z" fill="#B4B7C9"/><path d="M27.8357 24.0457L30.7196 9.34489C30.7515 9.20187 30.7835 9.09875 30.8157 9.03518C30.8476 8.97178 30.9198 8.91227 31.032 8.8565C31.1439 8.80096 31.3042 8.77307 31.5125 8.77307H40.0682C40.4847 8.77307 40.6607 8.9636 40.597 9.34489L40.0682 12.0848C40.0682 12.4344 39.8358 12.6091 39.3714 12.6091H34.6849L34.3245 14.5152H38.6263C39.0266 14.5152 39.1868 14.6741 39.1069 14.9917L38.5781 17.7317C38.5781 18.1289 38.3459 18.3274 37.8813 18.3274H33.5794L33.0989 20.7815H38.3859C38.7382 20.7815 38.8907 20.9563 38.8426 21.3057L38.29 24.0457C38.2737 24.173 38.2539 24.2683 38.2297 24.3316C38.2058 24.3953 38.1414 24.459 38.0376 24.5222C37.9331 24.5859 37.7769 24.6175 37.5689 24.6175H28.4126C28.1401 24.6175 27.968 24.5739 27.8959 24.4865C27.8237 24.3993 27.8034 24.2523 27.8357 24.0457Z" fill="#B4B7C9"/><path d="M47.4459 15.1107H47.6382C48.4229 13.6018 48.9277 12.6726 49.1521 12.3231L50.7144 9.60675C50.9222 9.25764 51.1146 9.02723 51.2911 8.91584C51.4672 8.80492 51.7477 8.74915 52.1321 8.74915H55.3765C55.6167 8.74915 55.7809 8.81287 55.8692 8.93959C55.957 9.06703 55.9449 9.20178 55.8332 9.3448L49.0079 19.3756L48.1186 24.0456C48.0706 24.4268 47.814 24.6174 47.3496 24.6174H44.0811C43.6162 24.6174 43.424 24.4268 43.5043 24.0456L44.4176 19.3756H44.4417L41.822 9.4639C41.7741 9.25764 41.8102 9.08674 41.9304 8.95167C42.0506 8.81692 42.2465 8.74915 42.5191 8.74915H45.4511C45.8195 8.74915 46.0678 8.793 46.1961 8.88016C46.3242 8.96764 46.4282 9.15411 46.5085 9.44006L47.0613 12.3231C47.2693 13.5464 47.3978 14.4756 47.4459 15.1107Z" fill="#B4B7C9"/><path d="M62.0094 8.6062C63.6594 8.6062 64.957 8.84456 65.9026 9.32095C66.6235 9.67054 66.8477 10.0835 66.5755 10.5599L65.9747 12.2994C65.8304 12.6488 65.666 12.8634 65.482 12.9426C65.2976 13.0224 65.0212 13.0141 64.6529 12.9188C63.6113 12.7125 62.6421 12.6092 61.7449 12.6092C61.28 12.6092 60.9437 12.6768 60.7355 12.8116C60.5271 12.9468 60.4232 13.2131 60.4232 13.6098C60.4232 13.9118 60.6073 14.1661 60.9759 14.3723L61.5287 14.6106C61.5924 14.6266 61.7367 14.6701 61.9611 14.7416C62.1853 14.813 62.3935 14.8808 62.586 14.9441C62.7781 15.0077 62.9303 15.0632 63.0425 15.1109C63.9558 15.4605 64.6488 15.921 65.1214 16.4929C65.5938 17.0647 65.8303 17.8509 65.8303 18.8517C65.8303 21.0757 65.0532 22.6639 63.4992 23.6169C62.1373 24.427 60.4789 24.8321 58.5247 24.8321C56.7941 24.8321 55.4003 24.5783 54.3428 24.0696C53.6377 23.7361 53.4217 23.3232 53.6939 22.8307L54.3187 21.1151C54.463 20.7339 54.623 20.5076 54.7994 20.436C54.9756 20.3647 55.2958 20.3847 55.7607 20.4956C57.2346 20.7184 58.4283 20.8293 59.3415 20.8293C60.3829 20.8293 60.9038 20.4323 60.9038 19.6379C60.9038 19.3681 60.8195 19.1613 60.6513 19.0185C60.483 18.8755 60.1744 18.7324 59.7261 18.5895C58.6045 18.2403 57.6511 17.7955 56.8663 17.2552C55.9531 16.5725 55.4964 15.5718 55.4964 14.2532C55.4964 13.2208 55.6724 12.3274 56.0251 11.5727C56.3773 10.8185 56.862 10.2347 57.4791 9.8215C58.0956 9.40867 58.7805 9.10301 59.5339 8.90423C60.2867 8.7056 61.1119 8.6062 62.0094 8.6062Z" fill="#B4B7C9"/><path d="M66.439 24.0457L69.3228 9.34489C69.3546 9.20187 69.3866 9.09875 69.4188 9.03518C69.4507 8.97178 69.5229 8.91227 69.6353 8.8565C69.7471 8.80096 69.9074 8.77307 70.1158 8.77307H78.6713C79.0878 8.77307 79.264 8.9636 79.2002 9.34489L78.6713 12.0848C78.6713 12.4344 78.4389 12.6091 77.9745 12.6091H73.2881L72.9277 14.5152H77.2295C77.6298 14.5152 77.7902 14.6741 77.7102 14.9917L77.1815 17.7317C77.1815 18.1289 76.9491 18.3274 76.4845 18.3274H72.1826L71.7021 20.7815H76.9893C77.3415 20.7815 77.4939 20.9563 77.4458 21.3057L76.8932 24.0457C76.8769 24.173 76.8571 24.2683 76.8329 24.3316C76.809 24.3953 76.7448 24.459 76.6408 24.5222C76.5365 24.5859 76.3801 24.6175 76.1721 24.6175H67.0156C66.7431 24.6175 66.5711 24.5739 66.499 24.4865C66.427 24.3993 66.4066 24.2523 66.439 24.0457Z" fill="#B4B7C9"/><path d="M82.3 8.77307H87.8272C89.0614 8.77307 90.0543 9.11853 90.8076 9.80952C91.5601 10.5004 91.9368 11.4892 91.9368 12.7759C91.9368 15.0952 90.9599 16.8423 89.0053 18.0176L90.2306 23.9266C90.2787 24.1332 90.2346 24.3 90.0984 24.427C89.9621 24.5544 89.7738 24.6176 89.5342 24.6176H86.5298C85.8406 24.6176 85.4727 24.4112 85.4246 23.9981L84.7996 18.8754H84.2226L83.2136 24.0457C83.1655 24.4269 82.9091 24.6175 82.4443 24.6175H79.1999C78.9273 24.6175 78.7511 24.5739 78.6711 24.4865C78.5908 24.3993 78.5667 24.2524 78.5992 24.0457L81.4834 9.34489C81.5315 9.13855 81.6108 8.99156 81.723 8.90409C81.8352 8.81701 82.0275 8.77307 82.3 8.77307ZM86.4096 12.6091H85.4479L84.9679 15.1585H85.8806C86.2172 15.1585 86.5097 15.0196 86.7582 14.7415C87.0066 14.4639 87.13 14.023 87.13 13.4191C87.13 12.8794 86.8904 12.6091 86.4096 12.6091Z" fill="#B4B7C9"/></g><defs><clipPath id="clip0_492_16064"><rect width="92" height="29" fill="white"/></clipPath></defs></svg>
+							</a></p>
+						</div>
+						<div class="col-xl-5 col-md-5 offset-md-1 mb-4 mb-md-0">
+							<div class="d-flex align-items-center">
+								<lightning-widget
+									class="w-100"
+									name="joinstr"
+									accent="#fed2c5"
+									to="joinstr@geyser.fund"
+									image="assets/logo.png"
+									amounts="2100,21000,210000"
+									labels="🍬,☕,🍕"
+									/>
+									<!--script src="https://embed.twentyuno.net/js/app.js"></script-->
+									<script src="assets/app.twentyuno.js"></script>
+								</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+		<!-- Footer -->
+		<footer class="footer pt-5 pb-4 pb-lg-5">
+			<div class="container text-center pt-lg-3">
+				<div class="navbar-brand justify-content-center text-dark mt-2 mt-lg-4">
+					<img src="./assets/logo.svg" class="ms-1" width="60" alt="joinstr">
+				</div>
+				<div class="navbar-brand justify-content-center text-dark mb-2 mb-lg-4">
+					<span class="fs-4">joinstr</span>
+				</div>
+				<small>A Decentralized CoinJoin Implementation</small>
+				<ul class="nav justify-content-center pt-3 pb-4 pb-lg-5">
+					<li class="nav-item">
+						<a href="#top" class="nav-link"><i class="btn-scroll-top-icon bi bi-chevron-up me-2"></i> Up</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="#features" class="nav-link"><i class="btn-scroll-top-icon bi bi-stars me-2"></i> Features</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="#how" class="nav-link"><i class="btn-scroll-top-icon bi bi-binoculars me-2"></i> Overview</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="#reviews" class="nav-link"><i class="btn-scroll-top-icon bi bi-balloon-heart me-2"></i> Reviews</a>
+					</li>
+					<li class="nav-item">
+						<a href="#faqs" class="nav-link"><i class="btn-scroll-top-icon bi bi-patch-question me-2"></i> FAQs</a>
+					</li>
+					<li class="nav-item">
+						<a href="https://bolt.fun/project/joinstr" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-mailbox-flag me-2"></i> Blog</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="https://stacker.news/kpa/posts/r/kpa" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-newspaper me-2"></i> News</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="https://docs.joinstr.xyz" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-journal-code me-2"></i> Docs</a>
+					</li>
+					<li class="nav-item">
+						<a href="https://www.figma.com/file/UtMGwoJPpL8FNUmsdqYoeQ/joinstr-%F0%9F%A6%83-Design#" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-paint-bucket me-2"></i>  Design</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="https://simplex.chat/contact/#/?v=2-7&smp=smp%3A%2F%2Fhejn2gVIqNU6xjtGM3OwQeuk8ZEbDXVJXAlnSBJBWUA%3D%40smp16.simplex.im%2F6sgt5HXO67waS511ySjAjMdfVTlxH40f%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEAEnBG0EnXUdVnkDclCItASoAeCedLR6ohSzaKZutFtQw%253D%26srv%3Dp3ktngodzi6qrf7w64mmde3syuzrv57y55hxabqcq3l5p6oi7yzze6qd.onion&data=%7B%22type%22%3A%22group%22%2C%22groupLinkId%22%3A%22kWH8D7W0oqPF9Rxa3dVgGQ%3D%3D%22%7D" target="_blank" class="nav-link"><i class="btn-scroll-top-icon bi bi-chat me-2"></i>  Community</a>
+					</li>
+					<li class="nav-item d-md-block d-lg-none">
+						<a href="#support" class="nav-link"><i class="btn-scroll-top-icon bi bi-currency-bitcoin me-2"></i> Support</a>
+					</li>
+					<!-- li class="nav-item">
+						<a href="https://gitlab.com/1440000bytes/joinstr/" class="nav-link"><i class="btn-scroll-top-icon bi bi-code me-2"></i>  Code</a>
+						</li-->
+				</ul>
+				<div class="btn-group-vertical justify-content-center pt-3 pb-4 pb-lg-5">
+					<a href="#" target="_blank" class="btn btn-primary rounded col-2 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-globe pe-2 fs-4"></i> Try it Online</a>
+					<!-- a href="#" target="_blank" class="btn btn-warning rounded col-2 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-plus-square me-2 fs-4"></i> Save it as PWA</a-->
+					<a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/plugin/zip" target="_blank" class="btn btn-secondary rounded col-2 btn-lg px-3 py-2 mb-3"><img src="https://electrum.org/logo/electrum_logo.png" class=" me-2" width="28" height="28"> Electrum Plugin</a>
+					<!-- a href="#" target="_blank" class="btn btn-outline-primary rosa-bg rounded col-2 btn-lg px-3 py-2 mb-3 disabled"><i class="bi bi-cloud-arrow-down me-2 fs-4"></i> Docker Container</a-->
+					<a href="#" target="_blank" class="btn btn-dark rounded col-2 btn-lg px-3 py-2 mb-3 disabled" style="border: 1px grey dotted;">
+					<img src="./assets/googleplay-light.svg" class="light-mode-img" width="139" alt="Google Play">
+					<img src="./assets/googleplay-dark.svg" class="dark-mode-img" width="139" alt="Google Play">
+					</a>
+				</div>
+				<div class="d-flex justify-content-center pt-4 mt-lg-3">
+					<a href="https://simplex.chat/contact/#/?v=2-7&smp=smp%3A%2F%2Fhejn2gVIqNU6xjtGM3OwQeuk8ZEbDXVJXAlnSBJBWUA%3D%40smp16.simplex.im%2F6sgt5HXO67waS511ySjAjMdfVTlxH40f%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEAEnBG0EnXUdVnkDclCItASoAeCedLR6ohSzaKZutFtQw%253D%26srv%3Dp3ktngodzi6qrf7w64mmde3syuzrv57y55hxabqcq3l5p6oi7yzze6qd.onion&data=%7B%22type%22%3A%22group%22%2C%22groupLinkId%22%3A%22kWH8D7W0oqPF9Rxa3dVgGQ%3D%3D%22%7D" class="btn btn-icon btn-secondary mx-2" title="Simplex" alt="Simplex">
+					<i class="bi bi-chat"></i>
+					</a>
+					<a href="https://gitlab.com/1440000bytes/joinstr/" class="btn btn-icon btn-secondary mx-2" title="GitLab" alt="GitLab">
+					<i class="bi bi-github"></i>
+					</a>
+					<a href="https://www.figma.com/file/UtMGwoJPpL8FNUmsdqYoeQ/joinstr-%F0%9F%A6%83-Design#" class="btn btn-icon btn-secondary mx-2" title="Figma" alt="Figma">
+					<i class="bi bi-paint-bucket"></i>
+					</a>
+				</div>
+				<p class="nav d-block fs-sm text-center pt-5 mt-lg-4 mb-0">
+					<span class="opacity-80"><a class="nav-link d-inline-block p-0" href="https://www.gnu.org/philosophy/floss-and-foss.en.html" target="_blank" rel="noopener">FOSS</a> | Free & Open Source Software by <a class="nav-link d-inline-block p-0" href="https://www.activism.net/cypherpunk/manifesto.html" target="_blank" rel="noopener">Cypherpunks</a></span>
+				</br></br>PGP:<a href="https://gitlab.com/-/snippets/3674938/raw/main/pgpkey.txt" class="nav-link d-inline-block p-0"> 9253 062A 4F92 D634 5908 5CA6 2D23 0520 212A 5901</a>
+				</p>
+			</div>
+		</footer>
+		<!-- Back to top button -->
+		<a href="#top" class="btn-scroll-top show" data-scroll="">
+		<span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span>
+		<i class="btn-scroll-top-icon bi bi-chevron-up"></i>
+		</a>
+		<!-- Vendor Scripts -->
+		<script src="./assets/bootstrap.bundle.min.js"></script>
+		<script src="./assets/smooth-scroll.polyfills.min.js"></script>
+		<script src="./assets/rellax.min.js"></script>
+		<script src="./assets/swiper-bundle.min.js"></script>
+		<!-- Main Theme Script -->
+		<script src="./assets/theme.min.js"></script>
+	</body>
+</html>
