@@ -40,7 +40,7 @@
   <div class="wrapper">
     <header>
       <h1 class="brand"><img src="assets/logo.svg" width="40" height="40" alt=""/>joinstr</h1>
-      <p>Coinjoin made easier and better. Nostr relays are used to coordinate, and participants can use multiple relays.</p>
+      <p>Coinjoin implementation using nostr</p>
       <p class="view"><a href="https://gitlab.com/invincible-privacy/joinstr/">View the source on GitLab <small>invincible-privacy/joinstr</small></a></p>
       <ul>
         <li><a href="https://docs.joinstr.xyz">Read the<strong>Docs</strong></a></li>
@@ -49,14 +49,12 @@
       </ul>
     </header>
     <section>
-      <h2>Get joinstr</h2>
-      <p>joinstr is a coinjoin protocol that uses nostr relays for coordination instead of a central coordinator. Pick the implementation that fits how you already run your wallet.</p>
       <dl>
         <dt><a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/plugin/zip">Electrum plugin</a></dt>
         <dd>Packaged builds of the plugin from py-joinstr. Does not require Bitcoin Core.</dd>
 
-        <dt><a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/gui">Web UI</a></dt>
-        <dd>A standalone Flask interface, also packaged as an Umbrel app.</dd>
+        <dt><a href="https://apps.umbrel.com/app/joinstr">Umbrel</a></dt>
+        <dd>One click install on your Umbrel node. The <a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/gui">web UI</a> is a standalone Flask interface and runs anywhere.</dd>
 
         <dt><a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/cli">Daemon and CLI</a></dt>
         <dd><code>joinstrd</code> exposes a REST API so any client can coinjoin over HTTP. <code>joinstr-cli</code> drives the same thing from a terminal.</dd>
@@ -97,7 +95,7 @@
       <p>Pools are created with custom denominations and a custom number of peers, both configurable by whoever creates the pool.</p>
 
       <h2>Support</h2>
-      <p>joinstr is free and open source software. If you find it useful, <a href="https://donate.joinstr.xyz">send some sats</a> or zap the project on nostr.</p>
+      <p><a href="https://donate.joinstr.xyz">donate.joinstr.xyz</a></p>
     </section>
     <footer>
       <p>
