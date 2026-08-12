@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8"/>
+  <title>joinstr</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link rel="stylesheet" href="styles/main.css"/>
+  <script src="scripts/theme.js"></script>
+
+  <!-- Primary meta tags -->
+  <meta name="title" content="joinstr"/>
+  <meta name="description" content="Decentralized coinjoin implementation using nostr"/>
+  <meta name="keywords" content="bitcoin,privacy,coinjoin,nostr"/>
+
+  <!-- Social meta tags -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="joinstr"/>
+  <meta property="og:title" content="joinstr"/>
+  <meta property="og:description" content="Decentralized coinjoin implementation using nostr"/>
+  <meta property="og:url" content="https://joinstr.xyz/"/>
+  <meta property="og:image" content="https://joinstr.xyz/assets/logo.png"/>
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="joinstr"/>
+  <meta name="twitter:description" content="Decentralized coinjoin implementation using nostr"/>
+  <meta name="twitter:image" content="https://joinstr.xyz/assets/logo.png"/>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg"/>
+  <link rel="icon" type="image/png" sizes="210x210" href="assets/logo.png"/>
+  <link rel="apple-touch-icon" href="assets/logo.png"/>
+  <link rel="mask-icon" href="assets/logo.svg" color="#f9675f"/>
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)"/>
+  <meta name="theme-color" content="#212121" media="(prefers-color-scheme: dark)"/>
+</head>
+
+<body>
+  <div class="wrapper">
+    <header>
+      <h1 class="brand"><img src="assets/logo.svg" width="40" height="40" alt=""/>joinstr</h1>
+      <p>Coinjoin made easier and better. Nostr relays are used to coordinate, and participants can use multiple relays.</p>
+      <p class="view"><a href="https://gitlab.com/invincible-privacy/joinstr/">View the source on GitLab <small>invincible-privacy/joinstr</small></a></p>
+      <ul>
+        <li><a href="https://docs.joinstr.xyz">Read the<strong>Docs</strong></a></li>
+        <li><a href="https://group.joinstr.xyz">Join the<strong>Community</strong></a></li>
+        <li><a href="https://donate.joinstr.xyz">Send some<strong>Sats</strong></a></li>
+      </ul>
+    </header>
+    <section>
+      <h2>Get joinstr</h2>
+      <p>joinstr is a coinjoin protocol that uses nostr relays for coordination instead of a central coordinator. Pick the implementation that fits how you already run your wallet.</p>
+      <dl>
+        <dt><a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/plugin/zip">Electrum plugin</a></dt>
+        <dd>Packaged builds of the plugin from py-joinstr. Does not require Bitcoin Core.</dd>
+
+        <dt><a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/gui">Web UI</a></dt>
+        <dd>A standalone Flask interface, also packaged as an Umbrel app.</dd>
+
+        <dt><a href="https://gitlab.com/invincible-privacy/joinstr/-/tree/main/cli">Daemon and CLI</a></dt>
+        <dd><code>joinstrd</code> exposes a REST API so any client can coinjoin over HTTP. <code>joinstr-cli</code> drives the same thing from a terminal.</dd>
+
+        <dt><a href="https://github.com/QcMrHyde/sparrow-joinstr">Sparrow</a></dt>
+        <dd>Sparrow Wallet with joinstr built in, for desktop users.</dd>
+
+        <dt><a href="https://github.com/rust-joinstr/joinstr">rust-joinstr</a></dt>
+        <dd>A Rust library for building joinstr into your own wallet.</dd>
+      </dl>
+
+      <h2>Features</h2>
+      <ul>
+        <li>Decentralized</li>
+        <li>Better UI/UX</li>
+        <li>Nostr relays used for coordination</li>
+        <li>Custom pool amounts and number of participants</li>
+        <li>Easy to implement in different wallets</li>
+      </ul>
+
+      <h2>FAQ</h2>
+      <h3>Can I use joinstr on mainnet right now?</h3>
+      <p>Yes.</p>
+
+      <h3>Can I use joinstr without Bitcoin Core?</h3>
+      <p>Yes. It can be used as an Electrum plugin which does not require Bitcoin Core. However using untrusted Electrum servers affects your privacy.</p>
+
+      <h3>Can I use joinstr on mobile?</h3>
+      <p>Yes. An Android app is available from <a href="https://gitlab.com/invincible-privacy/joinstr-kmp/-/releases">joinstr-kmp</a>.</p>
+
+      <h3>What fees do I need to pay for using joinstr?</h3>
+      <p>Transaction fees, plus a nostr relay fee if you use a paid relay. There is no coordinator taking a cut. Read more about <a href="https://uncensoredtech.substack.com/p/market-makers-in-joinstr">market making on joinstr</a> to earn fees from pools.</p>
+
+      <h3>What pool denominations are supported?</h3>
+      <p>Pools are created with custom denominations and a custom number of peers, both configurable by whoever creates the pool.</p>
+
+      <h2>Support</h2>
+      <p>joinstr is free and open source software. If you find it useful, <a href="https://donate.joinstr.xyz">send some sats</a> or zap the project on nostr.</p>
+    </section>
+    <footer>
+      <p>
+        <button id="theme-toggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">
+          <svg class="icon-dark" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .8.858 7.2 7.2 0 0 0 8.064 8.065.77.77 0 0 1 .858.799A7.5 7.5 0 1 1 6 .278"/></svg>
+          <svg class="icon-light" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg>
+        </button>
+      </p>
+      <p class="pgp">PGP <a href="https://gitlab.com/-/snippets/3674938/raw/main/pgpkey.txt">9253 062A 4F92 D634 5908<br/>5CA6 2D23 0520 212A 5901</a></p>
+      <p><small><a href="https://www.gnu.org/philosophy/floss-and-foss.en.html">Free and open source software</a> by <a href="cypherpunk_manifesto.html">cypherpunks</a></small></p>
+      <p><small>Theme by <a href="https://github.com/orderedlist/">orderedlist</a></small></p>
+    </footer>
+  </div>
+</body>
+
+</html>
